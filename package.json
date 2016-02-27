@@ -1,7 +1,7 @@
 {
-  "name": "movie",
-  "version": "0.2.0",
-  "description": "Everythinng about movie app for  imooc",
+  "name": "learnnode",
+  "version": "0.1.0",
+  "description": "learning nodejs and react",
   "main": "app.js",
   "directories": {
     "test": "test"
@@ -33,11 +33,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.oschina.net/wolf18387/imooc-movie.git"
+    "url": "https://github.com/yongjz/learnnode.git"
   },
   "keywords": [
     "lessonns"
   ],
-  "author": "Scott",
   "license": "MIT"
 }
