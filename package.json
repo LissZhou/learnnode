@@ -12,6 +12,7 @@
     "body-parser": "~1.15.0",
     "bson": "^0.4.20",
     "connect-mongo": "^1.1.0",
+    "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.1",
     "crypto": "~0.0.3",
     "express": "~4.13.4",
@@ -28,6 +29,7 @@
     "latest": "^0.2.0",
     "moment": "~2.11.0",
     "mongoose": "~4.4.5",
+    "morgan": "^1.7.0",
     "underscore": "~1.6.0"
   },
   "devDependencies": {},
