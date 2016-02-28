@@ -1,2 +1,2 @@
 # learnnode
-nodejs+express+mongodb+react
+nodejs+express+mongodb+jade
