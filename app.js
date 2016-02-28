@@ -16,13 +16,14 @@ mongoose.connect(dbUrl);
 
 // models loading
 var models_path = __dirname + '/app/models'
+
 var walk = function(path) {
   fs
     .readdirSync(path)
     .forEach(function(file) {
       var newPath = path + '/' + file;
       var stat = fs.statSync(newPath);
-
+      console.log("newPath:" + newPath);
       if (stat.isFile()) {
         if (/(.*)\.(js|coffee)/.test(file)) {
           require(newPath);
@@ -54,6 +55,15 @@ if ('development' === app.get('env')) {
   app.locals.pretty = true;
   //mongoose.set('debug', true)
 }
+
+// pre handle user
+app.use(function(req, res, next) {
+  var _user = req.session.user;
+
+  app.locals.user = _user;
+
+  next();
+});
 
 var routes = require('./config/routes');
 app.use('/', routes);
