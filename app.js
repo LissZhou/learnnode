@@ -11,7 +11,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 var fs = require('fs');
 
-var dbUrl = 'mongodb://localhost/test'
+var dbUrl = 'mongodb://localhost/test';
 mongoose.connect(dbUrl);
 
 // models loading

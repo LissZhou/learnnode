@@ -27,6 +27,7 @@
     "grunt-nodemon": "^0.4.1",
     "jade": "^1.11.0",
     "latest": "^0.2.0",
+    "log4js": "^0.6.31",
     "moment": "~2.11.0",
     "mongoose": "~4.4.5",
     "morgan": "^1.7.0",
