@@ -7,6 +7,9 @@ var logger = require('morgan');
 var path = require('path');
 var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(session);
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 var port = process.env.PORT || 3000;
 var app = express();
 var fs = require('fs');
@@ -36,7 +39,7 @@ var walk = function(path) {
 }
 walk(models_path);
 app.set('views', './app/views/pages');
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
 app.use(cookieParser());
@@ -48,6 +51,10 @@ app.use(session({
     collection: 'sessions'
   })
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 if ('development' === app.get('env')) {
   app.set('showStackError', true);

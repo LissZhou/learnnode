@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var passport = require('passport');
 
 // signup
 exports.showSignup = function(req, res) {
@@ -40,32 +41,35 @@ exports.signup = function(req, res) {
 
 // signin
 exports.signin = function(req, res) {
-  var _user = req.body.user;
-  var name = _user.name;
-  var password = _user.password;
-  User.findOne({name: name}, function(err, user) {
-    if (err) {
-      console.log(err);
-    }
+  passport.authenticate('local'), function(req, res) {
+    res.redirect('/');
+  }
+  // var _user = req.body.user;
+  // var name = _user.name;
+  // var password = _user.password;
+  // User.findOne({name: name}, function(err, user) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
 
-    if (!user) {
-      return res.redirect('/signup');
-    }
+  //   if (!user) {
+  //     return res.redirect('/signup');
+  //   }
 
-    user.comparePassword(password, function(err, isMatch) {
-      if (err) {
-        console.log(err);
-      }
+  //   user.comparePassword(password, function(err, isMatch) {
+  //     if (err) {
+  //       console.log(err);
+  //     }
 
-      if (isMatch) {
-        req.session.user = user;
-        return res.redirect('/');
-      }
-      else {
-        return res.redirect('/signin');
-      }
-    })
-  })
+  //     if (isMatch) {
+  //       req.session.user = user;
+  //       return res.redirect('/');
+  //     }
+  //     else {
+  //       return res.redirect('/signin');
+  //     }
+  //   })
+  // })
 }
 
 // logout

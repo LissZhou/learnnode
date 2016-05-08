@@ -1,5 +1,6 @@
-var mongoose = require('mongoose')
-var bcrypt = require('bcryptjs')
+var mongoose = require('mongoose');
+var bcrypt = require('bcryptjs');
+var passportLocalMongoose = require('passport-local-mongoose');
 var SALT_WORK_FACTOR = 10
 
 var UserSchema = new mongoose.Schema({
@@ -27,7 +28,9 @@ var UserSchema = new mongoose.Schema({
       default: Date.now()
     }
   }
-})
+});
+
+UserSchema.plugin(passportLocalMongoose);
 
 UserSchema.pre('save', function(next) {
   var user = this
