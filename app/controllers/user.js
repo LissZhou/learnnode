@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var Account = mongoose.model('accounts');
 var passport = require('passport');
 
 // signup
@@ -15,31 +16,27 @@ exports.showSignin = function(req, res) {
   });
 }
 
-exports.signup = function(req, res) {
-  console.log('exec signup');
-  User.register(new User({username: req.body.username}), req.body.password,
-    function(err, user) {
-      if(err) {
-        console.log(err);
-        //return res.render('signup', { error : err.message });
-        res.redirect('/signup');
+exports.signup = function(req, res, next) {
+  Account.register(new Account({ username : req.body.username }),
+    req.body.password, function(err, account) {
+      if (err) {
+        return res.render('register', { error : err.message });
       }
-      console.log(user);
-      req.session.user = req.body.user;
-      res.redirect('/');
-      // passport.authenticate('local')(req, res, function () {
-      //   console.log('exec authenticate');
-      //   req.session.user = req.body.user;
-      //   res.redirect('/');
-      //   // req.session.save(function (err) {
-      //   //     if (err) {
-      //   //         return next(err);
-      //   //     }
-      //   //     res.redirect('/');
-      //   // });
-      // });
-    });
-
+      console.log(account);
+      passport.authenticate('local')(req, res, function () {
+        req.session.user = {
+          username: req.body.username,
+        }
+        return res.redirect('/');
+        req.session.save(function (err) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect('/');
+        });
+      });
+    }
+  );
 
   // User.findOne({name: _user.name},  function(err, user) {
   //   if (err) {
@@ -64,34 +61,17 @@ exports.signup = function(req, res) {
 
 // signin
 exports.signin = function(req, res, next) {
-  console.log('exec signin');
-  var _user = req.body.user;
-  passport.authenticate('local', function(err, user) {
+  req.session.user = {
+    username: req.body.username,
+  }
+  console.log(req.session);
+  //res.redirect('/');
+  req.session.save(function (err) {
     if (err) {
-      res.status(500).send({
-        error: 500,
-        message: err.message
-      });
-    } else if (!user) {
-      res.status(403).send({
-        error: 403,
-        message: 'Invalid username and password combination'
-      });
-    } else {
-      req.logIn(user, (error) => {
-        if (error) {
-          res.status(500).send({
-            error: 500,
-            message: error.message
-          });
-        } else {
-          req.session.user = _user;
-          //res.status(200).end();
-          return res.redirect('/');
-        }
-      });
+      return next(err);
     }
-  })(req, res, next);
+    return res.redirect('/');
+  });
   // var _user = req.body.user;
   // req.session.user = _user;
   // console.log(req.session);

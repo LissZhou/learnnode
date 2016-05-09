@@ -4,9 +4,7 @@ var User = require('../app/controllers/user')
 var Movie = require('../app/controllers/movie')
 var Comment = require('../app/controllers/comment')
 var Category = require('../app/controllers/category')
-//var Account = require('../models/account');
-var mongoose = require('mongoose');
-var Account = mongoose.model('accounts');
+
 var passport = require('passport');
 
 var router = express.Router();
@@ -15,61 +13,8 @@ var router = express.Router();
 router.get('/', Index.index);
 
 // User
-// router.post('/user/signup', User.signup);
-// router.post('/user/signin', User.signin);
-// router.post('/user/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), function(req, res, next) {
-//   console.log('authenticate......');
-//   req.session.user = req.body.username
-//   res.redirect('/');
-//   // req.session.save(function (err) {
-//   //     if (err) {
-//   //         return next(err);
-//   //     }
-//   //     res.redirect('/');
-//   // });
-// });
-
-router.post('/user/signup', function(req, res, next) {
-  Account.register(new Account({ username : req.body.username }),
-    req.body.password,
-    function(err, account) {
-      if (err) {
-        return res.render('register', { error : err.message });
-      }
-      console.log(account);
-      passport.authenticate('local')(req, res, function () {
-        req.session.user = {
-          username: req.body.username,
-        }
-        return res.redirect('/');
-        req.session.save(function (err) {
-          if (err) {
-            return next(err);
-          }
-          res.redirect('/');
-        });
-      });
-    }
-  );
-});
-
-router.post('/user/signin',
-  passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }),
-  function(req, res, next) {
-
-    req.session.user = {
-      username: req.body.username,
-    }
-    console.log(req.session);
-    //res.redirect('/');
-    req.session.save(function (err) {
-        if (err) {
-            return next(err);
-        }
-        return res.redirect('/');
-    });
-});
-
+router.post('/user/signup', User.signup);
+router.post('/user/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), User.signin);
 router.get('/signin', User.showSignin);
 router.get('/signup', User.showSignup);
 router.get('/logout', User.logout);
