@@ -4,16 +4,8 @@ var passportLocalMongoose = require('passport-local-mongoose');
 var SALT_WORK_FACTOR = 10
 
 var UserSchema = new mongoose.Schema({
-  name: {
-    unique: true,
-    type: String
-  },
+  username: String,
   password: String,
-  // 0: nomal user
-  // 1: verified user
-  // 2: professonal user
-  // >10: admin
-  // >50: super admin
   role: {
     type: Number,
     default: 0
@@ -29,8 +21,6 @@ var UserSchema = new mongoose.Schema({
     }
   }
 });
-
-UserSchema.plugin(passportLocalMongoose);
 
 UserSchema.pre('save', function(next) {
   var user = this

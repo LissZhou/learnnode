@@ -18,7 +18,8 @@ exports.index = function(req, res) {
 
       res.render('index', {
         title: 'imooc 首页',
-        categories: categories
+        categories: categories,
+        user: req.session.user
       })
     })
 }

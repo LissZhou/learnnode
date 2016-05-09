@@ -9,13 +9,13 @@ var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 
 var port = process.env.PORT || 3000;
 var app = express();
 var fs = require('fs');
 
 var dbUrl = 'mongodb://localhost/test';
-mongoose.connect(dbUrl);
 
 // models loading
 var models_path = __dirname + '/app/models'
@@ -46,6 +46,8 @@ app.use(cookieParser());
 app.use(multipart());
 app.use(session({
   secret: 'imooc',
+  resave: false,
+  saveUninitialized: false,
   store: new mongoStore({
     url: dbUrl,
     collection: 'sessions'
@@ -53,8 +55,19 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
+app.use(flash());
 app.use(passport.session());
 
+var routes = require('./config/routes');
+app.use('/', routes);
+
+var Account = require('./app/models/account');
+//var User = mongoose.model('User');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
+mongoose.connect(dbUrl);
 
 if ('development' === app.get('env')) {
   app.set('showStackError', true);
@@ -72,8 +85,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-var routes = require('./config/routes');
-app.use('/', routes);
+
 
 app.listen(port);
 app.locals.moment = require('moment');

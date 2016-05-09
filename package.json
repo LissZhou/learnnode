@@ -11,6 +11,7 @@
     "bcryptjs": "^2.3.0",
     "body-parser": "~1.15.0",
     "bson": "^0.4.20",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "^1.1.0",
     "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.1",

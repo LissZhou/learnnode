@@ -16,37 +16,86 @@ exports.showSignin = function(req, res) {
 }
 
 exports.signup = function(req, res) {
-  var _user = req.body.user;
+  console.log('exec signup');
+  User.register(new User({username: req.body.username}), req.body.password,
+    function(err, user) {
+      if(err) {
+        console.log(err);
+        //return res.render('signup', { error : err.message });
+        res.redirect('/signup');
+      }
+      console.log(user);
+      req.session.user = req.body.user;
+      res.redirect('/');
+      // passport.authenticate('local')(req, res, function () {
+      //   console.log('exec authenticate');
+      //   req.session.user = req.body.user;
+      //   res.redirect('/');
+      //   // req.session.save(function (err) {
+      //   //     if (err) {
+      //   //         return next(err);
+      //   //     }
+      //   //     res.redirect('/');
+      //   // });
+      // });
+    });
 
-  User.findOne({name: _user.name},  function(err, user) {
-    if (err) {
-      console.log(err);
-    }
 
-    if (user) {
-      return res.redirect('/signin');
-    }
-    else {
-      user = new User(_user);
-      user.save(function(err, user) {
-        if (err) {
-          console.log(err);
-        }
-
-        res.redirect('/');
-      })
-    }
-  })
+  // User.findOne({name: _user.name},  function(err, user) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //
+  //   if (user) {
+  //     return res.redirect('/signin');
+  //   }
+  //   else {
+  //     user = new User(_user);
+  //     user.save(function(err, user) {
+  //       if (err) {
+  //         console.log(err);
+  //       }
+  //
+  //       res.redirect('/');
+  //     })
+  //   }
+  // });
 }
 
 // signin
-exports.signin = function(req, res) {
-  passport.authenticate('local'), function(req, res) {
-    res.redirect('/');
-  }
+exports.signin = function(req, res, next) {
+  console.log('exec signin');
+  var _user = req.body.user;
+  passport.authenticate('local', function(err, user) {
+    if (err) {
+      res.status(500).send({
+        error: 500,
+        message: err.message
+      });
+    } else if (!user) {
+      res.status(403).send({
+        error: 403,
+        message: 'Invalid username and password combination'
+      });
+    } else {
+      req.logIn(user, (error) => {
+        if (error) {
+          res.status(500).send({
+            error: 500,
+            message: error.message
+          });
+        } else {
+          req.session.user = _user;
+          //res.status(200).end();
+          return res.redirect('/');
+        }
+      });
+    }
+  })(req, res, next);
   // var _user = req.body.user;
-  // var name = _user.name;
-  // var password = _user.password;
+  // req.session.user = _user;
+  // console.log(req.session);
+  // return res.redirect('/');
   // User.findOne({name: name}, function(err, user) {
   //   if (err) {
   //     console.log(err);
