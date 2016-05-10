@@ -31,8 +31,7 @@ var walk = function(path) {
         if (/(.*)\.(js|coffee)/.test(file)) {
           require(newPath);
         }
-      }
-      else if (stat.isDirectory()) {
+      } else if (stat.isDirectory()) {
         walk(newPath);
       }
     })
@@ -40,8 +39,13 @@ var walk = function(path) {
 walk(models_path);
 app.set('views', './app/views/pages');
 app.set('view engine', 'pug');
-app.use(bodyParser.json({limit: '1mb'}));
-app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
+app.use(bodyParser.json({
+  limit: '1mb'
+}));
+app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '1mb'
+}));
 app.use(cookieParser());
 app.use(multipart());
 app.use(session({
@@ -58,11 +62,10 @@ app.use(passport.initialize());
 app.use(flash());
 app.use(passport.session());
 
-var routes = require('./config/routes');
+var routes = require('./app/route/routes');
 app.use('/', routes);
 
 var Account = require('./app/models/account');
-//var User = mongoose.model('User');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
@@ -84,8 +87,6 @@ app.use(function(req, res, next) {
 
   next();
 });
-
-
 
 app.listen(port);
 app.locals.moment = require('moment');

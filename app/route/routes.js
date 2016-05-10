@@ -1,9 +1,9 @@
 var express = require('express');
-var Index = require('../app/controllers/index')
-var User = require('../app/controllers/user')
-var Movie = require('../app/controllers/movie')
-var Comment = require('../app/controllers/comment')
-var Category = require('../app/controllers/category')
+var Index = require('../controllers/index');
+var User = require('../controllers/user');
+var Movie = require('../controllers/movie');
+var Comment = require('../controllers/comment');
+var Category = require('../controllers/category');
 
 var passport = require('passport');
 
